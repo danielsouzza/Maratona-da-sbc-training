@@ -15,7 +15,7 @@ public class CaixasMuitoEspeciais {
         boolean keep = true;
         while (keep) {
 
-            try{
+            try {
                 Box suitableBox = null;
                 List<Box> inventoryBox;
                 int numberBox = getInt(); // Number of boxes the customer wants to buy
@@ -32,7 +32,7 @@ public class CaixasMuitoEspeciais {
 
                     // Save the index of the box with the same dimensions
                     for (int k = 0; k < inventoryBox.size(); k++) {
-                        if(inventoryBox.get(k).isEqual(box)){
+                        if (inventoryBox.get(k).isEqual(box)) {
                             inventoryBox.get(k).oneMore();
                             isEqual = true;
                             break;
@@ -40,29 +40,30 @@ public class CaixasMuitoEspeciais {
                     }
 
                     // Do not repeat the same box
-                    if(!isEqual){
+                    if (!isEqual) {
                         inventoryBox.add(box);
                     }
                 }
 
                 // Box that fits the items as tightly as possible
-                for(int i = 0; i < inventoryBox.size(); i++){
-                    Box current = inventoryBox.get(i);
-                    if(current.checkIfItFits(clientBox) && current.numberOfBox >= numberBox){
-                        if(suitableBox == null || ( current.volumeDifference(clientBox) < suitableBox.volumeDifference(clientBox)) ){
-                            suitableBox = current;
-                        }
+                for (int i = 0; i < inventoryBox.size(); i++) {
+                    Box temp = inventoryBox.get(i);
+                    if (temp.checkIfItFits(clientBox)
+                            && temp.numberOfBox >= numberBox
+                            && (suitableBox == null
+                            || (temp.volumeDifference(clientBox) < suitableBox.volumeDifference(clientBox)))) {
+                        suitableBox = temp;
                     }
-                    
+
                 }
 
                 // Result
-                if(suitableBox == null){
+                if (suitableBox == null) {
                     System.out.println("impossible");
-                }else{
+                } else {
                     System.out.println(suitableBox.volumeDifference(clientBox));
                 }
-            }catch(IllegalArgumentException ex){
+            } catch (IllegalArgumentException ex) {
                 keep = false;
             }
         }
