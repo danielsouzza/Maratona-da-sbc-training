@@ -2,70 +2,94 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+/*
+
+By: Daniel L.Souza
+Challenge: 1290 - Caixas Muito Especiais - 2004
+*/
+
 public class CaixasMuitoEspeciais {
     static Scanner input = new Scanner(System.in);
 
     public static void main(String[] args) {
+        boolean keep = true;
+        while (keep) {
 
-        while (true) {
+            try{
+                Box suitableBox = null;
+                List<Box> inventoryBox;
+                int numberBox = getInt(); // Number of boxes the customer wants to buy
+                int numberInventory = getInt(); // Number of boxes in the stock list
 
-            Box bestBox = null;
-            List<Box> inventoryBox;
-            int numberBox = input.nextInt(); // Number of boxes the customer wants to buy
-            int numberInventory = input.nextInt(); // Number of boxes in the stock list
+                inventoryBox = new ArrayList<>(numberInventory);
 
-            if (numberBox == 0) {
-                break;
-            }
+                Box clientBox = createbox(); // Customer's desired box
 
-            inventoryBox = new ArrayList<>(numberInventory);
+                // Create and configure boxes
+                for (int i = 0; i < numberInventory; i++) {
+                    int isEqual = -1;
+                    Box box = createbox();
 
-            Box clientBox = new Box(
-                    input.nextInt(),
-                    input.nextInt(),
-                    input.nextInt());
-
-            // Create and configure boxes
-            for (int i = 0; i < numberInventory; i++) {
-                int isEqual = -1;
-                Box box = new Box(
-                        input.nextInt(),
-                        input.nextInt(),
-                        input.nextInt());
-
-                for (int k = 0; k < inventoryBox.size(); k++) {
-                    if(inventoryBox.get(k).isEqual(box)){
-                        isEqual = i;
+                    // Save the index of the box with the same dimensions
+                    for (int k = 0; k < inventoryBox.size(); k++) {
+                        if(inventoryBox.get(k).isEqual(box)){
+                            isEqual = k;
+                        }
                     }
+
+                    // Do not repeat the same box
+                    if(isEqual < 0){
+                        inventoryBox.add(box);
+                    }else{
+                        inventoryBox.get(isEqual).oneMore();
+                        
+                    } 
                 }
 
-                if(isEqual < 0){
-                    inventoryBox.add(box);
-                }else{
-                    inventoryBox.get(isEqual).oneMore();
+                // Box that fits the items as tightly as possible
+                for(int i = 0; i < inventoryBox.size(); i++){
+                    Box current = inventoryBox.get(i);
+                    if(current.checkIfItFits(clientBox) && current.numberOfBox >= numberBox){
+                        if(suitableBox == null || ( current.volumeDifference(clientBox) < suitableBox.volumeDifference(clientBox)) ){
+                            suitableBox = current;
+                        }
+                    }
                     
-                } 
-            }
-
-            
-            for(int i = 0; i < inventoryBox.size(); i++){
-                Box current = inventoryBox.get(i);
-                if(bestBox == null || (current.checkIfItFits(clientBox) && current.compareTo(clientBox) < bestBox.compareTo(clientBox)) ){
-                    bestBox = current;
                 }
-            }
 
-            if(bestBox == null || bestBox.numberOfBox < numberBox){
-                System.out.println("impossible");
-            }else{
-                System.out.println(bestBox.compareTo(clientBox));
+                // Result
+                if(suitableBox == null){
+                    System.out.println("impossible");
+                }else{
+                    System.out.println(suitableBox.volumeDifference(clientBox));
+                }
+            }catch(IllegalArgumentException ex){
+                keep = false;
             }
+        }
+    }
+
+    private static Box createbox() throws IllegalArgumentException {
+        return new Box(
+                getInt(),
+                getInt(),
+                getInt());
+    }
+
+    private static int getInt() {
+        int num = input.nextInt();
+        if (num > 0 && num <= 50 || num > 0)
+            return num;
+        else if (num > 1 && num <= 1500)
+            return num;
+        else {
+            throw new IllegalArgumentException();
         }
     }
 }
 
 // Box with all her elements
-class Box implements Comparable<Box> {
+class Box {
     int numberOfBox = 0;
     int[] coordinates;
 
@@ -90,8 +114,7 @@ class Box implements Comparable<Box> {
         return this.coordinates[index];
     }
 
-    @Override
-    public int compareTo(Box box) {
+    public int volumeDifference(Box box) {
         return this.getVolume() - box.getVolume();
     }
 
