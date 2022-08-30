@@ -27,23 +27,22 @@ public class CaixasMuitoEspeciais {
 
                 // Create and configure boxes
                 for (int i = 0; i < numberInventory; i++) {
-                    int isEqual = -1;
+                    Boolean isEqual = false;
                     Box box = createbox();
 
                     // Save the index of the box with the same dimensions
                     for (int k = 0; k < inventoryBox.size(); k++) {
                         if(inventoryBox.get(k).isEqual(box)){
-                            isEqual = k;
+                            inventoryBox.get(k).oneMore();
+                            isEqual = true;
+                            break;
                         }
                     }
 
                     // Do not repeat the same box
-                    if(isEqual < 0){
+                    if(!isEqual){
                         inventoryBox.add(box);
-                    }else{
-                        inventoryBox.get(isEqual).oneMore();
-                        
-                    } 
+                    }
                 }
 
                 // Box that fits the items as tightly as possible
