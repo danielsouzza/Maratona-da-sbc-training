@@ -49,9 +49,9 @@ public class CaixasMuitoEspeciais {
                 for (int i = 0; i < inventoryBox.size(); i++) {
                     Box temp = inventoryBox.get(i);
                     if (temp.checkIfItFits(clientBox)
-                            && temp.numberOfBox >= numberBox
+                            && temp.getNumberOfBox() >= numberBox
                             && (suitableBox == null
-                            || (temp.volumeDifference(clientBox) < suitableBox.volumeDifference(clientBox)))) {
+                            || (volumeDifference(temp,clientBox) < volumeDifference(suitableBox,clientBox)))) {
                         suitableBox = temp;
                     }
 
@@ -61,13 +61,19 @@ public class CaixasMuitoEspeciais {
                 if (suitableBox == null) {
                     System.out.println("impossible");
                 } else {
-                    System.out.println(suitableBox.volumeDifference(clientBox));
+                    System.out.println(volumeDifference(suitableBox,clientBox));
                 }
             } catch (IllegalArgumentException ex) {
                 keep = false;
             }
         }
     }
+
+    private static int volumeDifference(Box box1, Box box2) {
+        return box1.getVolume() - box2.getVolume();
+    }
+
+
 
     private static Box createbox() throws IllegalArgumentException {
         return new Box(
@@ -90,8 +96,8 @@ public class CaixasMuitoEspeciais {
 
 // Box with all her elements
 class Box {
-    int numberOfBox = 0;
-    int[] coordinates;
+    private int numberOfBox = 0;
+    private int[] coordinates;
 
     public Box(int x, int y, int z) {
         coordinates = new int[3];
@@ -114,12 +120,12 @@ class Box {
         return this.coordinates[index];
     }
 
-    public int volumeDifference(Box box) {
-        return this.getVolume() - box.getVolume();
-    }
-
     public void oneMore() {
         this.numberOfBox++;
+    }
+
+    public int getNumberOfBox(){
+        return this.numberOfBox;
     }
 
     public Boolean isEqual(Box box) {
