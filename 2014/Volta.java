@@ -6,31 +6,32 @@ public class Volta {
     public static void main(String[] args) {
         int timeFist = input.nextInt();
         int timeSecunde = input.nextInt();
-        int time = 0;
-        int round = 0;
+        boolean ishetardado = false;
+        int round1 = 0;
+        int round2 = 0;
         int p1 = 0;
         int p2 = 0;
-        int count = 0;
         while(true){
-            round++;
-            time += timeFist;
             p1++;
-            if(time >= timeFist*round){
-                p2++;
-                count = 0;
-            }else{
-                count++;
+            p2++;
+
+            if(p1 == timeFist){
+                // p1 = 0;
+                if(round1 > round2){
+                    ishetardado = true;
+                }
+                round1++;
             }
 
-            if(count >= 2){
-                System.out.println(round);
+            if(p2 == timeSecunde){
+                p2 = 0;
+                round2++;
+            }
+
+            if(ishetardado){
+                System.out.println(round1);
                 break;
             }
         }
     }
 }
-
-5  1 0
-10 2 1
-15 3 2
-20 4 2
